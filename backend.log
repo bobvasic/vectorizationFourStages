@@ -1,0 +1,80 @@
+INFO:     Started server process [287378]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+[2025-10-25 13:39:15] INFO - [UPLOAD] Received file: aistudio.jpeg | Tier: pro | Quality: balanced
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] File saved: uploads/56788ca4-86c6-44e8-9c84-538aeaf0b28d.jpeg
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Processing queued
+============================================================
+CYBERLINK SECURITY - VECTORIZER.DEV API SERVER
+============================================================
+Starting FastAPI server...
+API Documentation: http://localhost:8000/docs
+Health Check: http://localhost:8000/health
+============================================================
+INFO:     127.0.0.1:56084 - "POST /api/upload?tier=pro&quality=balanced HTTP/1.1" 200 OK
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Starting vectorization pipeline
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Tier: pro | Quality: balanced | Stages: [1, 2, 3]
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Stage 1: Starting pixel-perfect vectorization...
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Stage 1: Complete ✓
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Stage 2: Starting region optimization...
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Stage 2: Complete ✓
+[2025-10-25 13:39:15] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Stage 3: Starting true vectorization...
+[2025-10-25 13:39:22] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Stage 3: Complete ✓
+[2025-10-25 13:39:22] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Pipeline complete! Time: 7.50s
+[2025-10-25 13:39:22] INFO - [JOB 56788ca4-86c6-44e8-9c84-538aeaf0b28d] Generated 5 output files
+╔══════════════════════════════════════════════════════════╗
+║     ULTIMATE PIXEL-PERFECT PHOTOREALISTIC SVG v4.0      ║
+╚══════════════════════════════════════════════════════════╝
+
+[ULTIMATE] Processing 225x225 image
+[ULTIMATE] Resolution factor: 2.0%
+[ULTIMATE] Pixel block size: 50x50
+[ULTIMATE] Generating approximately 16 vector rectangles
+
+[PROCESSING] Creating vector elements...
+
+[COMPLETE] Ultimate photorealistic SVG created!
+[STATS] Total vector elements: 25
+[STATS] Original JPEG: 4,966 bytes
+[STATS] SVG size: 1,841 bytes
+[STATS] Compression ratio: 2.70x
+[OUTPUT] outputs/56788ca4-86c6-44e8-9c84-538aeaf0b28d/56788ca4-86c6-44e8-9c84-538aeaf0b28d_stage1_pixel_perfect.svg
+[PHOTO-VECTORIZER] Loaded 225x225 image
+[PHOTO-VECTORIZER] Total pixels to process: 50,625
+
+============================================================
+PHOTOREALISTIC PIXEL-PERFECT VECTORIZATION
+============================================================
+[MODE] ADAPTIVE SAMPLING - 10% of pixels
+[PROCESSING] Adaptive sampling at 10%...
+[COMPLETE] Created 529 vector elements
+
+[COMPLETE] Photorealistic SVG created!
+[STATS] Original JPEG: 4,966 bytes
+[STATS] SVG size: 34,648 bytes
+[STATS] Output: outputs/56788ca4-86c6-44e8-9c84-538aeaf0b28d/56788ca4-86c6-44e8-9c84-538aeaf0b28d_stage2_optimized.svg
+
+============================================================
+OPTIMIZED PHOTOREALISTIC VECTORIZATION
+============================================================
+[TECHNIQUE 1] Creating hybrid vector/raster approach...
+[TECHNIQUE 2] Intelligent pixel grouping...
+[HYBRID] Creating vector overlays for key regions...
+[COMPLETE] Optimized photorealistic SVG saved to outputs/56788ca4-86c6-44e8-9c84-538aeaf0b28d/56788ca4-86c6-44e8-9c84-538aeaf0b28d_stage2_hybrid.svg
+[INIT] Loaded image: 225x225 pixels
+[VECTORIZATION] Starting advanced vectorization pipeline...
+[ANALYSIS] Performing deep image analysis...
+[ANALYSIS] Optimal technique: gradient_mesh
+[PREPROCESSING] Applying edge-preserving filters...
+[REGIONS] Extracting color regions...
+[OPTIMIZATION] Created optimized SVG: 26129 bytes
+[COMPRESSION] Created compressed SVGZ: outputs/56788ca4-86c6-44e8-9c84-538aeaf0b28d/56788ca4-86c6-44e8-9c84-538aeaf0b28d_stage3_vectorized_compressed.svgz
+[SUCCESS] SVG saved to: outputs/56788ca4-86c6-44e8-9c84-538aeaf0b28d/56788ca4-86c6-44e8-9c84-538aeaf0b28d_stage3_vectorized.svg
+INFO:     127.0.0.1:41470 - "GET /api/status/56788ca4-86c6-44e8-9c84-538aeaf0b28d HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41470 - "GET /api/results/56788ca4-86c6-44e8-9c84-538aeaf0b28d HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41478 - "GET /api/download/56788ca4-86c6-44e8-9c84-538aeaf0b28d/56788ca4-86c6-44e8-9c84-538aeaf0b28d_stage1_pixel_perfect.svg HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [287378]
