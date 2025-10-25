@@ -1,0 +1,5 @@
+{
+  "name": "vectorizer.dev",
+  "description": "A web application to convert raster images (JPG, PNG) into vector graphics using a sleek, dark-themed UI with green accents. Upload an image to see the vectorization process.",
+  "requestFramePermissions": []
+}

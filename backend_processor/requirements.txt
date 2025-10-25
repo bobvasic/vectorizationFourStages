@@ -1,0 +1,17 @@
+# CyberLink Security - Vectorizer.dev Backend Dependencies
+# Python 3.8+ required
+
+# Web Framework
+fastapi==0.115.0
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# Image Processing
+Pillow==11.0.0
+
+# Type Checking & Validation
+pydantic==2.10.6
+typing-extensions==4.12.2
+
+# Utilities
+python-dotenv==1.0.1
