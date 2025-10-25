@@ -41,3 +41,10 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Rust
+rust_core/target/
+rust_core/Cargo.lock
+*.so
+*.pyd
+*.dylib
