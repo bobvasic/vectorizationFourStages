@@ -15,4 +15,4 @@ typing-extensions==4.12.2
 
 # Utilities
 python-dotenv==1.0.1
-numpy==1.24.3
+numpy>=1.26.0

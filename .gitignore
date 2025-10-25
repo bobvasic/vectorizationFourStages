@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Node / Frontend
+node_modules/
+dist/
+.vite/
+*.log
+
+# Backend processing artifacts
+backend_processor/uploads/
+backend_processor/outputs/
+backend_processor/venv/
+
+# Runtime files
+*.pid
+backend.log
+frontend.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local

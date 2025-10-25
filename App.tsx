@@ -6,6 +6,7 @@ import { SpinnerIcon } from './components/icons/SpinnerIcon';
 import { ArrowPathIcon, ArrowDownTrayIcon, PhotoIcon } from './components/icons/UIIcons';
 
 type Status = 'idle' | 'processing' | 'success' | 'error';
+type QualityLevel = 'fast' | 'balanced' | 'high' | 'ultra';
 
 const App: React.FC = () => {
   const [status, setStatus] = useState<Status>('idle');
@@ -13,6 +14,7 @@ const App: React.FC = () => {
   const [originalPreview, setOriginalPreview] = useState<string | null>(null);
   const [vectorizedPreview, setVectorizedPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedQuality, setSelectedQuality] = useState<QualityLevel>('high');
 
   const handleImageSelect = useCallback((file: File, previewUrl: string) => {
     setOriginalImage(file);
@@ -41,7 +43,7 @@ const App: React.FC = () => {
       const formData = new FormData();
       formData.append('file', originalImage);
       
-      const uploadResponse = await fetch('http://localhost:8000/api/upload?tier=pro&quality=balanced', {
+      const uploadResponse = await fetch(`http://localhost:8000/api/upload?quality=${selectedQuality}`, {
         method: 'POST',
         body: formData,
       });
@@ -64,17 +66,10 @@ const App: React.FC = () => {
         if (statusData.status === 'completed') {
           completed = true;
           
-          // Get results
-          const resultsResponse = await fetch(`http://localhost:8000/api/results/${jobId}`);
-          const resultsData = await resultsResponse.json();
-          
-          // Use the first SVG file as preview
-          if (resultsData.files && resultsData.files.length > 0) {
-            const firstFile = resultsData.files[0];
-            const svgUrl = `http://localhost:8000${firstFile.download_url}`;
-            setVectorizedPreview(svgUrl);
-            setStatus('success');
-          }
+          // Download vectorized SVG
+          const downloadUrl = `http://localhost:8000/api/download/${jobId}`;
+          setVectorizedPreview(downloadUrl);
+          setStatus('success');
         } else if (statusData.status === 'failed') {
           throw new Error(statusData.message || 'Processing failed');
         }
@@ -112,6 +107,36 @@ const App: React.FC = () => {
             <ImageUploader onImageSelect={handleImageSelect} onError={handleError} />
           ) : (
             <div className="w-full max-w-5xl flex flex-col items-center">
+              {/* Quality Selection */}
+              <div className="mb-8 w-full flex flex-col items-center">
+                <h3 className="text-sm font-medium text-gray-400 mb-3 tracking-wide">QUALITY LEVEL</h3>
+                <div className="flex gap-3">
+                  {(['fast', 'balanced', 'high', 'ultra'] as QualityLevel[]).map((level) => (
+                    <button
+                      key={level}
+                      type="button"
+                      onClick={() => setSelectedQuality(level)}
+                      disabled={status === 'processing'}
+                      className={`
+                        px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-300
+                        ${selectedQuality === level 
+                          ? 'bg-green-600 text-black shadow-[0_0_20px_rgba(22,163,74,0.5)] border-2 border-green-500' 
+                          : 'bg-gray-700/50 text-gray-300 border-2 border-gray-600 hover:bg-gray-600/50 hover:text-white'}
+                        disabled:opacity-50 disabled:cursor-not-allowed
+                      `}
+                    >
+                      {level.charAt(0).toUpperCase() + level.slice(1)}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  {selectedQuality === 'fast' && 'Quick results with lower color count'}
+                  {selectedQuality === 'balanced' && 'Good quality with reasonable processing time'}
+                  {selectedQuality === 'high' && 'Recommended: Very good quality and detail'}
+                  {selectedQuality === 'ultra' && 'Maximum quality with longer processing time'}
+                </p>
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
                 {/* Original Image */}
                 <div className="flex flex-col items-center">
