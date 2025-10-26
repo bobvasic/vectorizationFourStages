@@ -1,272 +1,379 @@
-# Vectorizer.dev v3.0 - Production Ready
+# Vectorizer.dev - AI-Powered Image Vectorization
 
-**Enterprise-Grade AI-Powered Image Vectorization Platform**
+Transform raster images (PNG/JPG) into scalable vector graphics (SVG) using LAB color science, AI-enhanced edge detection, and Rust acceleration.
 
-Transform raster images into hyper-realistic, scalable vector graphics using advanced computer vision, LAB color science, and Rust acceleration.
-
----
-
-## 🚀 Key Features
-
-- ✅ **30-90x Performance Boost** - Rust-accelerated compute core
-- ✅ **40% Better Color Quality** - LAB color space quantization
-- ✅ **20% Sharper Edges** - AI-enhanced detection
-- ✅ **Smooth Bezier Curves** - Douglas-Peucker path simplification
-- ✅ **Batch Processing** - Upload up to 10 files simultaneously
-- ✅ **Production Infrastructure** - Docker + CI/CD + monitoring
+**Version:** 3.0.0 | **Status:** Production Ready | **License:** Proprietary
 
 ---
 
-## 📦 Quick Start
+## 🎯 Key Features
 
-### Prerequisites
-- **Docker** 24.0+ & **Docker Compose** 2.20+
-- **OR** Node.js 20+, Python 3.12+, Rust 1.75+
+- **30-90x Faster** - Rust-powered compute core
+- **40% Better Colors** - LAB color space quantization  
+- **20% Sharper Edges** - AI-enhanced detection
+- **Smooth Curves** - Douglas-Peucker + Bezier fitting
+- **Batch Processing** - Up to 10 files simultaneously
+- **Production Ready** - Docker deployment, REST API
 
-### Option 1: Docker Deployment (Recommended)
+---
+
+## 🚀 Quick Start
+
+### Local Development
+
 ```bash
-# Clone repository
-git clone https://github.com/cyberlink-security/vectorizer_four_stages.git
-cd vectorizer_four_stages
+# Clone
+git clone https://github.com/bobvasic/vectorizationFourStages.git
+cd vectorizationFourStages
 
-# Start all services
+# Start with Docker (recommended)
 docker-compose up -d
 
-# Verify health
-curl http://localhost:8000/health
-```
-
-**Services Available:**
-- Frontend: `http://localhost:80`
-- API: `http://localhost:8000`
-- API Docs: `http://localhost:8000/docs`
-- Prometheus: `http://localhost:9090`
-- Grafana: `http://localhost:3000`
-
-### Option 2: Local Development
-```bash
-# Install dependencies
+# Or manual setup
 npm install
 cd backend_processor && pip install -r requirements.txt
-
-# Build Rust core
-cd ../rust_core
-cargo build --release
-maturin develop --release
-
-# Start services
-cd ..
-./start_fullstack.sh
+cd ../rust_core && cargo build --release && maturin develop --release
+cd .. && ./start_fullstack.sh
 ```
+
+**Access:**
+- Frontend: http://localhost:5173
+- API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
 
 ---
 
-## 🎯 Usage
+## 📦 Deploy to Render.com
 
-### Web Interface
-1. Open `http://localhost:5173` (dev) or `http://localhost:80` (prod)
-2. Upload image (PNG/JPG, max 10MB)
-3. Select quality: **fast** | **balanced** | **high** | **ultra**
-4. Toggle premium features: **LAB Color Science** | **AI Edge Detection**
-5. Download vectorized SVG
+**Cost:** $7/month (Backend) + Free (Frontend)
 
-### API Usage
+### 1. Backend API Setup
 
-```bash
-# Upload & vectorize
-curl -X POST http://localhost:8000/api/upload \
-  -F "file=@image.jpg" \
-  -F "quality=high" \
-  -F "use_lab=true" \
-  -F "use_ai=true"
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Click **New +** → **Web Service**
+3. Connect your GitHub repo
+4. Configure:
+   ```
+   Name: vectorizer-api
+   Runtime: Docker
+   Dockerfile Path: ./Dockerfile
+   Instance Type: Starter ($7/mo)
+   ```
 
-# Response: {"job_id": "abc-123", "status": "queued", ...}
+5. **Add Persistent Disk** (CRITICAL):
+   ```
+   Name: vectorizer-storage
+   Mount Path: /app/data
+   Size: 10 GB
+   ```
 
-# Check status
-curl http://localhost:8000/api/status/abc-123
+6. **Environment Variables:**
+   ```bash
+   PORT=10000
+   PYTHONUNBUFFERED=1
+   MAX_FILE_SIZE_MB=10
+   ```
 
-# Download result
-curl http://localhost:8000/api/download/abc-123 -o output.svg
+7. Click **Create Web Service**
+
+**Build time:** ~15-20 minutes (first deploy)
+
+### 2. Frontend Static Site
+
+1. Click **New +** → **Static Site**
+2. Connect same GitHub repo
+3. Configure:
+   ```
+   Name: vectorizer-frontend
+   Build Command: npm install && npm run build
+   Publish Directory: dist
+   ```
+
+4. **Environment Variable:**
+   ```bash
+   VITE_API_URL=https://vectorizer-api.onrender.com
+   ```
+   *(Replace with your actual backend URL)*
+
+5. Click **Create Static Site**
+
+**Build time:** ~2-3 minutes
+
+### 3. Update CORS
+
+After backend deploys, update `backend_processor/api_server.py`:
+
+```python
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://vectorizer-frontend.onrender.com",  # Your frontend URL
+        "http://localhost:5173",  # Local dev
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 ```
 
-### Command Line
+Commit and push to redeploy.
+
+### 4. Verify Deployment
+
 ```bash
-cd backend_processor
-python3 intelligent_vectorizer.py input.jpg output.svg ultra
+# Test backend
+curl https://vectorizer-api.onrender.com/health
+
+# Test frontend
+open https://vectorizer-frontend.onrender.com
 ```
 
----
-
-## 📊 Performance
-
-| Image Size | Quality | Processing Time | Output Size |
-|------------|---------|-----------------|-------------|
-| 512×512 | Fast | 0.8s | ~50KB |
-| 512×512 | High | 2.1s | ~120KB |
-| 1024×1024 | High | 5.4s | ~280KB |
-| 2048×2048 | High | 12.7s | ~650KB |
-
-**Benchmarked on**: Intel Core i7, 16GB RAM, Ubuntu 22.04
+✅ Done! Your app is live.
 
 ---
 
 ## 🏗️ Architecture
 
 ```
-┌─────────────┐      ┌──────────────┐      ┌─────────────┐
-│   React     │ ───► │   FastAPI    │ ───► │  Rust Core  │
-│  Frontend   │      │   Backend    │      │  (30x Fast) │
-│  (Port 80)  │      │  (Port 8000) │      │   + PyO3    │
-└─────────────┘      └──────────────┘      └─────────────┘
-                            │
-                ┌───────────┼───────────┐
-                │           │           │
-          ┌──────────┐ ┌────────┐ ┌─────────┐
-          │  Redis   │ │ Files  │ │  ONNX   │
-          │  Cache   │ │Storage │ │ Models  │
-          └──────────┘ └────────┘ └─────────┘
+┌──────────┐      ┌──────────┐      ┌──────────┐
+│  React   │ ───► │ FastAPI  │ ───► │   Rust   │
+│ Frontend │      │  Backend │      │   Core   │
+└──────────┘      └──────────┘      └──────────┘
+                       │
+                  ┌────┴────┐
+              Uploads    Outputs
 ```
 
-**Technology Stack:**
-- **Frontend**: React 18, TypeScript, Vite, TailwindCSS
-- **Backend**: FastAPI (Python 3.12), Uvicorn
-- **Compute**: Rust 1.75+, PyO3, Rayon (parallelism)
-- **ML**: ONNX Runtime (optional)
-- **Infrastructure**: Docker, Nginx, Redis, Prometheus, Grafana
+**Stack:**
+- **Frontend:** React 18 + TypeScript + Vite + TailwindCSS
+- **Backend:** FastAPI (Python 3.12) + Uvicorn
+- **Core:** Rust 1.75 + PyO3 + Rayon (parallelism)
+- **ML:** ONNX Runtime (optional)
 
 ---
 
-## 📚 Documentation
+## 📡 API Usage
 
-### Essential Documentation (4 docs)
-1. **[Core Functionality](docs/1_CORE_FUNCTIONALITY.md)** - Features, business logic, tech stack
-2. **[API Reference](docs/2_API_REFERENCE.md)** - Complete API guide with examples
-3. **[Deployment Guide](docs/3_DEPLOYMENT_GUIDE.md)** - Docker setup, production config
-4. **[Operations Manual](docs/4_OPERATIONS_MANUAL.md)** - Monitoring, troubleshooting, maintenance
+### Upload & Vectorize
 
-### Interactive API Docs
-- **Swagger UI**: http://localhost:8000/docs
-- **OpenAPI Spec**: http://localhost:8000/openapi.json
+```bash
+curl -X POST http://localhost:8000/api/upload \
+  -F "file=@image.jpg" \
+  -F "quality=high" \
+  -F "use_lab=true" \
+  -F "use_ai=true"
+
+# Response: {"job_id": "abc-123", ...}
+```
+
+### Check Status
+
+```bash
+curl http://localhost:8000/api/status/abc-123
+
+# Response: {"status": "completed", "progress": 100, ...}
+```
+
+### Download Result
+
+```bash
+curl http://localhost:8000/api/download/abc-123 -o output.svg
+```
+
+**Full API Docs:** http://localhost:8000/docs (Swagger UI)
+
+---
+
+## ⚙️ Configuration
+
+### Quality Levels
+
+| Level | Colors | Speed | Use Case |
+|-------|--------|-------|----------|
+| `fast` | 16 | 0.8s | Quick previews |
+| `balanced` | 32 | 1.5s | Production default |
+| `high` | 64 | 2.1s | Print quality |
+| `ultra` | 128 | 3.8s | Professional work |
+
+*Benchmarked on 512×512 images, Intel i7, 16GB RAM*
+
+### Environment Variables
+
+```bash
+# Backend
+API_HOST=0.0.0.0
+API_PORT=8000          # 10000 for Render
+MAX_FILE_SIZE_MB=10
+ALLOWED_ORIGINS=*       # Restrict in production
+
+# Frontend
+VITE_API_URL=http://localhost:8000
+```
 
 ---
 
 ## 🧪 Testing
 
 ```bash
-# Run test suite
 cd backend_processor
 python3 test_vectorization.py
 
-# Expected output:
-# Tests run: 14
-# Successes: 14
-# Failures: 0
+# Expected: 14/14 tests passing
 ```
 
-**Test Coverage:**
-- ✅ Unit tests (vectorization logic)
-- ✅ Integration tests (Rust core)
-- ✅ Performance benchmarks
-- ✅ Edge cases and error handling
+---
+
+## 📚 Documentation
+
+- **[Core Functionality](docs/1_CORE_FUNCTIONALITY.md)** - Features, business model
+- **[API Reference](docs/2_API_REFERENCE.md)** - Complete API docs
+- **[Deployment Guide](docs/3_DEPLOYMENT_GUIDE.md)** - Docker, production
+- **[Operations Manual](docs/4_OPERATIONS_MANUAL.md)** - Monitoring, troubleshooting
 
 ---
 
-## 🔐 Security
+## 🔒 Security
 
-- ✅ Input validation (file type whitelist)
-- ✅ Size limit enforcement (10MB)
-- ✅ UUID-based filenames
-- ✅ CORS configuration
-- ✅ Docker container isolation
-- ✅ Automated security audits (GitHub Actions)
+- File type whitelist (PNG/JPG only)
+- Size limit enforcement (10MB default)
+- UUID-based filenames (no path traversal)
+- CORS configuration
+- Docker container isolation
+- Input validation (FastAPI + Pydantic)
 
 ---
 
-## 🚀 Deployment
+## 💰 Pricing
 
-### Production Deployment
+### Free Tier
+- 10 uploads/day
+- Max 3 concurrent jobs
+- All quality levels
+- LAB + AI features included
+
+### Pro ($29/month)
+- Unlimited uploads
+- Max 10 concurrent jobs
+- 50MB file size limit
+- API access
+
+### Enterprise ($299/month)
+- Self-hosted deployment
+- Custom limits
+- White-label option
+- SLA + support
+
+---
+
+## 🛠️ Development
+
+### Project Structure
+
+```
+vectorizer_four_stages/
+├── backend_processor/       # Python API + processing
+│   ├── api_server.py       # FastAPI application
+│   ├── intelligent_vectorizer.py  # Core vectorizer
+│   └── requirements.txt    # Python dependencies
+├── rust_core/              # Rust acceleration
+│   ├── src/lib.rs         # PyO3 bindings
+│   └── Cargo.toml         # Rust dependencies
+├── components/             # React UI components
+├── docs/                   # Documentation (4 files)
+├── Dockerfile              # Production build
+├── docker-compose.yml      # Local development
+└── README.md              # This file
+```
+
+### Commands
+
 ```bash
-# Build and deploy
-docker-compose build
-docker-compose up -d
+# Development
+npm run dev                 # Start Vite dev server
+python3 backend_processor/api_server.py  # Start API
+./start_fullstack.sh       # Start both
 
-# Health check
-curl http://localhost:8000/health
+# Production
+docker-compose up -d       # Start containers
+docker-compose logs -f     # View logs
+docker-compose down        # Stop containers
 
-# View logs
-docker-compose logs -f vectorizer-api
+# Testing
+python3 backend_processor/test_vectorization.py
+cargo test --manifest-path=rust_core/Cargo.toml
 ```
 
-### CI/CD Pipeline
-GitHub Actions workflow automatically:
-- ✅ Runs tests (Rust + Python + Frontend)
-- ✅ Builds Docker images
-- ✅ Security audits (cargo audit, safety, npm audit)
-- ✅ Performance benchmarks
-- ✅ Deploys to production (on main branch)
+---
+
+## 🐛 Troubleshooting
+
+### Port already in use
+```bash
+# Kill process on port 8000
+lsof -ti:8000 | xargs kill -9
+```
+
+### Rust module not loading
+```bash
+cd rust_core
+cargo clean
+cargo build --release
+maturin develop --release
+```
+
+### Docker build fails
+```bash
+docker system prune -a
+docker-compose build --no-cache
+```
+
+### CORS errors
+Update `allow_origins` in `backend_processor/api_server.py`
 
 ---
 
-## 📈 Roadmap
+## 📈 Performance
 
-### Current: v3.0 ✅
-- LAB color quantization
-- AI-enhanced edge detection
-- Rust acceleration (30-90x)
-- Batch processing API
-- Docker deployment
-- CI/CD pipeline
+| Image Size | Quality | Time | Output |
+|------------|---------|------|--------|
+| 512×512 | Fast | 0.8s | ~50KB |
+| 512×512 | High | 2.1s | ~120KB |
+| 1024×1024 | High | 5.4s | ~280KB |
+| 2048×2048 | High | 12.7s | ~650KB |
 
-### Next: v3.5 (Q1 2026)
-- PostgreSQL job persistence
-- Redis task queue
-- WebSocket real-time updates
-- API authentication (JWT)
-- User account system
-
-### Future: v4.0 (Q2 2026)
-- Deep learning contour extraction
-- Semantic object segmentation
-- Gradient mesh support
-- Multiple export formats (PDF, EPS, DXF)
+**Improvements:**
+- LAB color: +40% perceptual accuracy
+- AI edges: +20% sharpness
+- Bezier curves: -70% file size
 
 ---
 
-## 🤝 Contributing
+## 🤝 Support
 
-This is a private enterprise project. For inquiries:
-- **Email**: support@vectorizer.dev
-- **Organization**: CyberLink Security
+- **Documentation:** `/docs` directory
+- **API Issues:** Check [API Reference](docs/2_API_REFERENCE.md)
+- **Deployment Help:** See [Deployment Guide](docs/3_DEPLOYMENT_GUIDE.md)
+- **Bug Reports:** GitHub Issues
+- **Email:** support@cyberlinksecurity.com
 
 ---
 
 ## 📄 License
 
-Proprietary - Commercial use requires Pro/Enterprise license.
+**Proprietary** - Commercial use requires Pro/Enterprise license.
 
-**Pricing:**
-- **Free Tier**: 10 uploads/day
-- **Pro ($29/mo)**: Unlimited uploads, premium features
-- **Enterprise ($299/mo)**: Self-hosted, custom limits, SLA
+- Free tier: Personal use only
+- Pro/Enterprise: Commercial use permitted
 
 ---
 
 ## 🏆 Credits
 
-**Lead Engineer**: Bob Vasic (CyberLink Security)
-**Version**: 3.0.0  
-**Status**: ✅ Production Ready  
-**Release Date**: 2025-10-25
+**Created by:** Bob Vasic (CyberLink Security)  
+**Version:** 3.0.0  
+**Release Date:** 2025-10-25  
+**Status:** ✅ Production Ready
 
 ---
 
-## 📞 Support
-
-- **Documentation**: See `/docs` directory
-- **API Issues**: Check `/docs/Technical_Documentation.md`
-- **Deployment**: See `/docs/App_Architecture_Documentation.md`
-- **Health Check**: `GET /health`
-
----
-
-**Built with ❤️ and Rust 🦀 by CyberLink Security**
+Built with ❤️ and Rust 🦀
