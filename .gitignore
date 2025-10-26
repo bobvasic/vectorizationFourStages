@@ -28,6 +28,11 @@ backend_processor/venv/
 *.pid
 backend.log
 frontend.log
+FINAL_REPORT.md
+
+# Obsolete directories
+monitoring/
+docs/archive/
 
 # OS
 .DS_Store

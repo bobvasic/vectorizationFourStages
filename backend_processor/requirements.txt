@@ -8,6 +8,11 @@ python-multipart==0.0.20
 
 # Image Processing
 Pillow==11.0.0
+opencv-python==4.10.0.84
+scikit-image==0.24.0
+scipy==1.14.1
+
+# Professional Vectorization (OpenCV + scikit-image)
 
 # Type Checking & Validation
 pydantic==2.10.6

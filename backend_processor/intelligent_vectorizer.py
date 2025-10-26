@@ -415,9 +415,18 @@ class IntelligentVectorizer:
 def vectorize_image(input_path: str, output_path: str, quality: str = 'high') -> str:
     """
     Main entry point for intelligent vectorization
+    Uses professional vectorization engine for high-fidelity output
     """
-    vectorizer = IntelligentVectorizer(input_path)
-    return vectorizer.create_high_quality_svg(output_path, quality)
+    try:
+        # Use professional vectorizer (OpenCV-based, superior quality)
+        from professional_vectorizer import vectorize_professional
+        return vectorize_professional(input_path, output_path, quality)
+    except Exception as e:
+        print(f"[WARNING] Professional vectorizer failed: {e}")
+        print("[FALLBACK] Using basic vectorizer...")
+        # Fallback to basic vectorizer
+        vectorizer = IntelligentVectorizer(input_path)
+        return vectorizer.create_high_quality_svg(output_path, quality)
 
 
 if __name__ == "__main__":
