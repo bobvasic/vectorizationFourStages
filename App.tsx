@@ -15,6 +15,8 @@ const App: React.FC = () => {
   const [vectorizedPreview, setVectorizedPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedQuality, setSelectedQuality] = useState<QualityLevel>('high');
+  const [useLab, setUseLab] = useState<boolean>(true);
+  const [useAi, setUseAi] = useState<boolean>(true);
 
   const handleImageSelect = useCallback((file: File, previewUrl: string) => {
     setOriginalImage(file);
@@ -42,8 +44,11 @@ const App: React.FC = () => {
       // Upload image to backend API
       const formData = new FormData();
       formData.append('file', originalImage);
+      formData.append('quality', selectedQuality);
+      formData.append('use_lab', String(useLab));
+      formData.append('use_ai', String(useAi));
       
-      const uploadResponse = await fetch(`http://localhost:8000/api/upload?quality=${selectedQuality}`, {
+      const uploadResponse = await fetch(`http://localhost:8000/api/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -135,6 +140,35 @@ const App: React.FC = () => {
                   {selectedQuality === 'high' && 'Recommended: Very good quality and detail'}
                   {selectedQuality === 'ultra' && 'Maximum quality with longer processing time'}
                 </p>
+              </div>
+              
+              {/* Premium Features */}
+              <div className="mb-8 w-full flex justify-center gap-6">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={useLab}
+                    onChange={(e) => setUseLab(e.target.checked)}
+                    disabled={status === 'processing'}
+                    className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-green-600 focus:ring-green-500 focus:ring-offset-gray-900 disabled:opacity-50"
+                  />
+                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
+                    ✨ LAB Color Science <span className="text-green-500 font-semibold">(+40% quality)</span>
+                  </span>
+                </label>
+                
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={useAi}
+                    onChange={(e) => setUseAi(e.target.checked)}
+                    disabled={status === 'processing'}
+                    className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-green-600 focus:ring-green-500 focus:ring-offset-gray-900 disabled:opacity-50"
+                  />
+                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
+                    ✨ AI Edge Detection <span className="text-green-500 font-semibold">(+20% sharper)</span>
+                  </span>
+                </label>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">

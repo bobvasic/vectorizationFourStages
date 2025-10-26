@@ -18,8 +18,10 @@ dist/
 *.log
 
 # Backend processing artifacts
-backend_processor/uploads/
-backend_processor/outputs/
+backend_processor/uploads/*
+!backend_processor/uploads/.gitkeep
+backend_processor/outputs/*
+!backend_processor/outputs/.gitkeep
 backend_processor/venv/
 
 # Runtime files
