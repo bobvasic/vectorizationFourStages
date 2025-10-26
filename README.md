@@ -138,15 +138,14 @@ python3 intelligent_vectorizer.py input.jpg output.svg ultra
 
 ## 📚 Documentation
 
-### Complete Documentation Suite (7 docs)
-- **[App Summary](docs/App_Summary.md)** - Overview, features, quick start
-- **[Technical Documentation](docs/Technical_Documentation.md)** - API reference, integration examples
-- **[Architecture](docs/App_Architecture_Documentation.md)** - System design, data flow
-- **[Complete Bundle](docs/COMPLETE_DOCUMENTATION_BUNDLE.md)** - Visual identity, development, configuration, roadmap
-- **[Production Report](PRODUCTION_READY_REPORT.md)** - Final completion summary
+### Essential Documentation (4 docs)
+1. **[Core Functionality](docs/1_CORE_FUNCTIONALITY.md)** - Features, business logic, tech stack
+2. **[API Reference](docs/2_API_REFERENCE.md)** - Complete API guide with examples
+3. **[Deployment Guide](docs/3_DEPLOYMENT_GUIDE.md)** - Docker setup, production config
+4. **[Operations Manual](docs/4_OPERATIONS_MANUAL.md)** - Monitoring, troubleshooting, maintenance
 
-### API Documentation
-- **Interactive Docs**: http://localhost:8000/docs
+### Interactive API Docs
+- **Swagger UI**: http://localhost:8000/docs
 - **OpenAPI Spec**: http://localhost:8000/openapi.json
 
 ---
